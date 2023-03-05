@@ -1,0 +1,189 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+{% load static %}
+{% load tctip_tags %}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <title>FuHua科技|登录FuHua账号</title>
+
+	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+    <!-- Meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+
+
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="{% static 'user_css/style.css'%}" type="text/css" media="all" />
+{% load_tctip %}
+</head>
+
+<body>
+    <div class="signinform">
+        <h1>欢迎来到FUHUA~</h1>
+        <!-- container -->
+        <div class="container">
+            <!-- main content -->
+            <div class="w3l-form-info">
+                <div class="w3_info">
+                    <h2>Login</h2>
+                    <form id="form1" method="post" target="_self" >
+
+                        省份: <select name="province" style="width:100px;"></select>
+                        城市: <select name="city" style="width:100px;"></select>
+
+                        <input   type="hidden" id="ip" name="ip" >
+                         <div class="input-group">
+                            <span><i class="fas fa-user" aria-hidden="true"></i></span>
+                            <input type="text" placeholder="今日体温" required="required" name="TEMPERATURE">
+                        </div>
+                          异常上报<select name="ABNORMAL_TYPE" required="required" class="shortselect">
+                            <option value=""selected="selected">---请选择--</option>
+                            <option value="无" >无</option>
+                            <option value="发热">发热</option>
+                        <option value="咳嗽">咳嗽</option>
+                        <option value="浑身疼">浑身疼</option>
+                    </select>
+                           <div class="input-group">
+                            <span><i class="fas fa-user" aria-hidden="true"></i></span>
+                            <input type="text" placeholder="具体描述" required="required" name="ABNORMAL_DESC">
+                        </div>
+                        在校状态<select name="BTS_RECORD"  required="required" class="shortselect">
+                            <option value=""selected="selected">---请选择--</option>
+                            <option value="0" >暂缓返校</option>
+                            <option value="1">今日返校</option>
+                        <option value="3">已返校</option>
+                    </select>
+                        <button class="btn btn-primary btn-block" type="submit">提交</button>
+                    </form>
+                    		 {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+                </div>
+            </div>
+            <!-- //main content -->
+        </div>
+        <!-- //container -->
+        <!-- footer -->
+        <div class="footer">
+            <p>&copy; 2022 Service login form. All Rights Reserved | Design by <a href=""
+                    target="blank">ShiHaoyang</a></p>
+        </div>
+        <!-- footer -->
+    </div>
+
+    <!-- fontawesome v5-->
+    <script src="{% static 'user_js/fontawesome.js'%}"></script>
+        <script type="text/javascript">
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://api.ipify.org?format=json', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById("ip").value = response.ip;
+            }
+        };
+        xhr.send();
+    </script>
+
+<script type="text/javascript">
+var arr_province = ["请选择省/城市","北京","上海","天津","重庆","新疆","西藏","宁夏","内蒙古","广西","黑龙江","吉林","辽宁","河北","山东","江苏","安徽","浙江","福建","广东","海南","云南","贵州","四川","湖南","湖北","河南","山西","陕西","甘肃","青海","江西","台湾"];
+var arr_city = [
+                ["请选择城市/地区"],
+                ["北京"],
+                ['上海'],
+                ['天津'],
+                ['重庆'],
+	['乌鲁木齐','克拉玛依'],
+                ["拉萨","日喀则"],
+  	['银川', '石嘴山', '吴忠', '固原', '中卫'],
+ 	 ['呼和浩特', '包头', '乌海', '赤峰', '通辽', '鄂尔多斯', '呼伦贝尔', '巴彦淖尔'],
+  	['南宁', '柳州', '桂林', '梧州', '北海', '崇左', '来宾', '玉林'],
+  	['哈尔滨','大庆','齐齐哈尔','佳木斯','鸡西','鹤岗','双鸭山','牡丹江','伊春','七台河','黑河','绥化'],
+  	['长春','吉林','四平','辽源','通化','白山','松原','白城'],
+  	['沈阳','大连','鞍山','抚顺','本溪','丹东','锦州','营口','阜新','辽阳','盘锦','铁岭','朝阳','葫芦岛'],
+ 	 ['石家庄','唐山','邯郸','秦皇岛','保定','张家口','承德','廊坊','沧州','衡水','邢台'],
+  	['济南','青岛','淄博','枣庄','东营','烟台','潍坊','济宁','泰安','威海','日照','莱芜','临沂','德州','聊城','菏泽','滨州'],
+ 	 ['南京','镇江','常州','无锡','苏州','徐州','连云港','淮安','盐城','扬州','泰州','南通','宿迁'],
+  	['合肥','蚌埠','芜湖','淮南','亳州','阜阳','淮北','宿州','滁州','安庆','巢湖','马鞍山','宣城','黄山','池州','铜陵'],
+  	['杭州','嘉兴','湖州','宁波','金华','温州','丽水','绍兴','衢州','舟山','台州'],
+  	['福州','厦门','泉州','三明','南平','漳州','莆田','宁德','龙岩'],
+  	['广州','深圳','汕头','惠州','珠海','揭阳','佛山','河源','阳江','茂名','湛江','梅州','肇庆','韶关','潮州','东莞','中山','清远','江门','汕尾','云浮'],
+  	['海口','三亚'],
+  	['昆明','曲靖','玉溪','保山','昭通','丽江','普洱','临沧'],
+  	['贵阳','六盘水','遵义','安顺'],
+  	['成都','绵阳','德阳','广元','自贡','攀枝花','乐山','南充','内江','遂宁','广安','泸州','达州','眉山','宜宾','雅安','资阳'],
+ 	 ['长沙','株洲','湘潭','衡阳','岳阳','郴州','永州','邵阳','怀化','常德','益阳','张家界','娄底'],
+ 	 ['武汉','襄樊','宜昌','黄石','鄂州','随州','荆州','荆门','十堰','孝感','黄冈','咸宁'],
+ 	 ['郑州','洛阳','开封','漯河','安阳','新乡','周口','三门峡','焦作','平顶山','信阳','南阳','鹤壁','濮阳','许昌','商丘','驻马店'],
+  	['太原','大同','忻州','阳泉','长治','晋城','朔州','晋中','运城','临汾','吕梁'],
+ 	 ['西安','咸阳','铜川','延安','宝鸡','渭南','汉中','安康','商洛','榆林'],
+  	['兰州','天水','平凉','酒泉','嘉峪关','金昌','白银','武威','张掖','庆阳','定西','陇南'],
+ 	 ['西宁'],
+['南昌','九江','赣州','吉安','鹰潭','上饶','萍乡','景德镇','新余','宜春','抚州'],
+['台北','台中','基隆','高雄','台南','新竹','嘉义'],
+            ];
+
+onload = function() {
+    var oForm = document.getElementById('form1');
+    var oProvince = oForm.children[0];
+    var oCity = oForm.children[1];
+
+    // 添加点击 onchange 事件
+    oProvince.onchange = function() {
+        var _this = this.selectedIndex;
+        // 默认进来高度清零
+        oCity.length = 0;
+        // 指定城市下拉的高度
+        initCity(_this);
+    };
+
+    // 初始化下拉列表
+    init();
+    // init select
+    function init(){
+        var index = 0;
+        // 指定下拉的高度
+        oProvince.length = arr_province.length;
+
+        // 循环数组, 把内容写到下拉列表中去
+        for( var i = 0; i < arr_province.length; i++ ){
+            oProvince.options[i].text = arr_province[i];
+            oProvince.options[i].value = arr_province[i];
+        }
+
+        // 指定默认索引号
+        oProvince.selectedIndex = index;
+        // 指定城市下拉的高度
+        initCity(index);
+    }
+
+    // 城市下拉内容高度
+    function initCity(index){
+        // 指定城市下拉的高度
+        oCity.length = arr_city[index].length;
+
+        // 循环数组, 把内容写到下拉列表中去
+        for( var i = 0; i < arr_city[index].length; i++ ){
+            oCity.options[i].text = arr_city[index][i];
+            oCity.options[i].value = arr_city[index][i];
+        }
+    }
+
+};
+
+
+</script>
+
+</body>
+
+</html>

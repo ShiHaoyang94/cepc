@@ -4,7 +4,7 @@ from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirec
 import re
 from django.core import mail
 
-from vedio import settings
+from cepc import settings
 
 try:
 
@@ -18,39 +18,39 @@ class SimpleMiddleware(MiddlewareMixin):
 
         if re.match("^/admin/", request.path):
             return None
-        elif request.path == '/user/qunfa/':
+        elif request.path == '/all_user/qunfa/':
             return None
         elif request.path == '/busy/':
 
             return None
         elif request.COOKIES.get('res_code'):
-            if request.path != '/user/login/' and request.path != '/user/register/' and not re.match("^/user/check/",request.path) and not re.match(
-                    "^/user/forget/", request.path):
-                return HttpResponseRedirect('/user/login/')
+            if request.path != '/all_user/login/' and request.path != '/all_user/register/' and not re.match("^/all_user/check/",request.path) and not re.match(
+                    "^/all_user/forget/", request.path):
+                return HttpResponseRedirect('/all_user/login/')
 
 
 
         else:
             if request.session.get('username') or request.COOKIES.get('username'):
-                if request.path != '/user/login/' and request.path != '/user/register/' and request.path != '/user/forget/':
+                if request.path != '/all_user/login/' and request.path != '/all_user/register/' and request.path != '/all_user/forget/':
 
-                    if not re.match("^/index/", request.path) and request.path != '/user/exit/' and not re.match(
-                            "^/movies/", request.path):
+                    if not re.match("^/abnormal_records/", request.path) and request.path != '/all_user/exit/' and not re.match(
+                            "^/trip_card_records/", request.path):
 
-                        return HttpResponseRedirect('/index/main/')
-                    elif re.match("^/movies/", request.path):
+                        return HttpResponseRedirect('/abnormal_records/post/')
+                    elif re.match("^/trip_card_records/", request.path):
                         return None
                 else:
-                    return HttpResponseRedirect('/index/main/')
-            elif request.path == '/user/register/':
+                    return HttpResponseRedirect('/abnormal_records/post/')
+            elif request.path == '/all_user/register/':
                 return None
-            elif request.path == '/user/forget/':
+            elif request.path == '/all_user/forget/':
                 return None
-            elif request.path == '/user/login/':
+            elif request.path == '/all_user/login/':
                 return None
 
             else:
-                return HttpResponseRedirect('/user/login/')
+                return HttpResponseRedirect('/all_user/login/')
 
 
 # class IpMiddleware(MiddlewareMixin):
@@ -58,9 +58,9 @@ class SimpleMiddleware(MiddlewareMixin):
 #         ip_address=request.META['REMOTE_ADDR']
 #         print('我的地址'+ip_address)
 
-class ExceptionMW(MiddlewareMixin):
-    def process_exception(self, request, exception):
-        mail.send_mail(subject='FuHua科技报错啦~', message=traceback.format_exc()+str(request.session.get('username'))+str(request.COOKIES.get('username')), from_email='352446506@qq.com',
-                       recipient_list=settings.EX_EMAIL)
-
-        return HttpResponseRedirect('/busy')
+# class ExceptionMW(MiddlewareMixin):
+#     def process_exception(self, request, exception):
+#         mail.send_mail(subject='FuHua科技报错啦~', message=traceback.format_exc()+str(request.session.get('username'))+str(request.COOKIES.get('username')), from_email='352446506@qq.com',
+#                        recipient_list=settings.EX_EMAIL)
+#
+#         return HttpResponseRedirect('/busy')
