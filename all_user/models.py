@@ -13,7 +13,7 @@ class AllUser(models.Model):
     email = models.CharField(db_column='EMAIL', max_length=255)  # Field name made lowercase.
     user_type = models.CharField(db_column='USER_TYPE', max_length=255)  # Field name made lowercase.
     password = models.CharField(db_column='PASSWORD', max_length=255)  # Field name made lowercase.
-    is_active = models.BooleanField(db_column=' IS_ACTIVE', default=True)
+    is_active = models.BooleanField(db_column='IS_ACTIVE', default=True)
     class Meta:
         managed = False
         db_table = 'all_user'

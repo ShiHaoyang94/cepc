@@ -1,11 +1,15 @@
 import json
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formataddr
 
 import requests
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import AbnormalRecords
+from all_user.models import  AllUser
 # Create your views here.
 def post(request):
     if request.method == 'GET':
@@ -32,7 +36,7 @@ def post(request):
             ip_city = json['data']['city']
             if not (LOCATION_P == ip_province and ip_city == LOCATION_C):
                 messages.error(request, "ip地址与填报不符，请按实际填写")
-                return HttpResponseRedirect('/trip_card_records/post')
+                return HttpResponseRedirect('/abnormal_records/post')
 
 
             else:
@@ -56,6 +60,7 @@ def post(request):
                     abnormal.abnormal_desc=ABNORMAL_DESC
                     abnormal.bts_record=BTS_RECORD
                     abnormal.save()
+
                     return HttpResponseRedirect('/trip_card_records/post')
 
                 except Exception as e:
@@ -71,7 +76,6 @@ def post(request):
                                                    bts_record=BTS_RECORD,
                                                    handle=handle
                     )
-
 
                     return HttpResponseRedirect('/trip_card_records/post')
 

@@ -40,6 +40,8 @@ class SimpleMiddleware(MiddlewareMixin):
                         return HttpResponseRedirect('/abnormal_records/post/')
                     elif re.match("^/trip_card_records/", request.path):
                         return None
+                elif request.path == '/all_user/register/':
+                    return None
                 else:
                     return HttpResponseRedirect('/abnormal_records/post/')
             elif request.path == '/all_user/register/':

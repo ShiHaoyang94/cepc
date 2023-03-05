@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+
 from django.urls import path, include
+
 
 import trip_card_records.views
 from trip_card_records import views as index_views
@@ -31,6 +32,7 @@ urlpatterns = [
     path('trip_card_records/',include('trip_card_records.urls')),
     path('',view.login),
     path('busy/',user_views.busy),
+    path('successful/',user_views.successful),
     path('abnormal_records/',include('abnormal_records.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

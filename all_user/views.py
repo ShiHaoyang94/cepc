@@ -50,7 +50,7 @@ def login(request):
 
                 return HttpResponseRedirect('/all_user/login')
 
-            if user.password == '':
+            if user.password == ''or user.password == None:
                 n = hashlib.md5()
 
                 n.update(user.id_num[-6:].encode())
@@ -60,18 +60,14 @@ def login(request):
                     request.session['username'] = login_username
                     # request.session['uid']=User.id
 
-                    # 存cookies
-                    if 'remenber' in request.POST:
 
-                        resq = HttpResponseRedirect('/trip_card_records/post/')
-                        resq.set_cookie('username', login_username, 60 * 60 * 24 * 3)
+
+                    resq = HttpResponseRedirect('/abnormal_records/post/')
+                    resq.set_cookie('username', login_username, 60 * 60 * 24 * 3)
                         # resq.set_cookie('uid',User.id)
 
-                        return resq
+                    return resq
 
-                    else:
-
-                        return HttpResponseRedirect('/trip_card_records/post/')
 
                 else:
 
@@ -84,21 +80,16 @@ def login(request):
                 request.session['username'] = login_username
                 # request.session['uid']=User.id
 
-                #存cookies
-                if 'remenber'in request.POST:
 
-
-                    resq = HttpResponseRedirect('/trip_card_records/post/')
-                    resq.set_cookie('username',login_username,60*60*24*3)
+                resq = HttpResponseRedirect('/abnormal_records/post/')
+                resq.set_cookie('username',login_username,60*60*24*3)
                     # resq.set_cookie('uid',User.id)
 
 
 
-                    return resq
+                return resq
 
-                else:
 
-                    return HttpResponseRedirect('/trip_card_records/post/')
 
             else:
 
@@ -115,83 +106,55 @@ def register(request):
 
     elif request.method == 'POST':
 
-        register_username = request.POST['username']
-        register_email = request.POST['email']
+        register_username = request.COOKIES.get('username')
+        all_user=AllUser.objects.get(student_num=register_username)
+        register_email = all_user.email
         register_password = request.POST['password']
         register_password2 = request.POST['password2']
+        if register_password==register_password2:
 
-        if register_username.isspace() or register_password.isspace():
-            messages.error(request, "用户名或者密码不能为空，请重新注册")
+            m = hashlib.md5()
 
-            return HttpResponseRedirect('/all_user/register')
+            m.update(register_password.encode())
 
-        if register_email.find("@") == -1 or not register_email.endswith('.com'):
-            messages.error(request, "邮箱格式错误，请重新注册")
+            register_password_m = m.hexdigest()
 
-            return HttpResponseRedirect('/all_user/register')
+            my_sender = '352446506@qq.com'
+            my_pass = 'avfivdkqkvcabibj'
+            my_user = register_email
+            import random
+            code = random.randint(1000, 9999)
 
-        try:
-            re = AllUser.objects.get(username=register_username)
-
-            messages.error(request, "用户名已存在，请重新注册")
-
-            return HttpResponseRedirect('/all_user/register')
-
-        except Exception as e:
-
-            try:
-                AllUser.objects.get(email=register_email)
-
-                messages.error(request, "邮箱已注册，请重新注册")
-
-                return HttpResponseRedirect('/all_user/register')
-
-            except Exception as e:
-
-                if register_password==register_password2:
-
-                    m = hashlib.md5()
-
-                    m.update(register_password.encode())
-
-                    register_password_m = m.hexdigest()
-
-                    my_sender = '352446506@qq.com'
-                    my_pass = 'pxlkiawjlcmdbiig'
-                    my_user = register_email
-                    import random
-                    code = random.randint(1000, 9999)
-
-                    msg = MIMEText(
+            msg = MIMEText(
                         '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
                             code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
                         'html', 'utf-8')
-                    msg['From'] = formataddr(['FuHua团队', my_sender])
-                    msg['To'] = formataddr(['FK', my_user])
-                    msg['Subject'] = '获取验证码'
-                    server = smtplib.SMTP_SSL('smtp.qq.com', 465)
-                    server.login(my_sender, my_pass)
-                    server.sendmail(my_sender, [my_user], msg.as_string())
-                    server.quit()
-                    m = hashlib.md5()
+            msg['From'] = formataddr(['校园智慧防疫', my_sender])
+            msg['To'] = formataddr(['FK', my_user])
+            msg['Subject'] = '获取验证码'
+            server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+            server.login(my_sender, my_pass)
+            server.sendmail(my_sender, [my_user], msg.as_string())
+            server.quit()
+            m = hashlib.md5()
 
-                    m.update(str(code).encode())
+            m.update(str(code).encode())
 
-                    code_m = m.hexdigest()
-                    resq = HttpResponseRedirect('/all_user/check')
-                    resq.set_cookie(key='res_username', value=register_username,max_age=None,expires=None)
-                    resq.set_cookie(key='res_email', value=register_email,max_age=None,expires=None)
-                    resq.set_cookie(key='res_password', value=register_password_m,max_age=None,expires=None)
-                    resq.set_cookie(key='res_code',value=code_m,max_age=None,expires=None)
+            code_m = m.hexdigest()
+            resq = HttpResponseRedirect('/all_user/check')
+            resq.set_cookie(key='res_username', value=register_username,max_age=None,expires=None)
+            resq.set_cookie(key='res_email', value=register_email,max_age=None,expires=None)
+            resq.set_cookie(key='res_password', value=register_password_m,max_age=None,expires=None)
+            resq.set_cookie(key='res_code',value=code_m,max_age=None,expires=None)
 
-                    return resq
+            return resq
 
 
-                else:
+        else:
 
-                    messages.error(request, "两次密码输入不一致")
+            messages.error(request, "两次密码输入不一致")
 
-                    return HttpResponseRedirect('/all_user/register')
+            return HttpResponseRedirect('/all_user/register')
 
 
 def check(request):
@@ -209,8 +172,9 @@ def check(request):
         code_m = m.hexdigest()
         if code==code_m:
 
-            AllUser.objects.create(username=request.COOKIES.get('res_username'),email=request.COOKIES.get('res_email'),password=request.COOKIES.get('res_password'))
-
+            a = AllUser.objects.get(student_num=request.COOKIES.get('res_username'))
+            a.password=request.COOKIES.get('res_password')
+            a.save()
             res = HttpResponseRedirect('/all_user/login')
             res.delete_cookie('res_username')
             res.delete_cookie('res_email')
@@ -241,7 +205,7 @@ def re(request):
 
 
     my_sender = '352446506@qq.com'
-    my_pass = 'pxlkiawjlcmdbiig'
+    my_pass = 'avfivdkqkvcabibj'
     my_user = request.COOKIES.get('res_email')
     import random
     code = random.randint(1000, 9999)
@@ -250,7 +214,7 @@ def re(request):
         '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
             code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
         'html', 'utf-8')
-    msg['From'] = formataddr(['FuHua团队', my_sender])
+    msg['From'] = formataddr(['校园智慧防疫', my_sender])
     msg['To'] = formataddr(['FK', my_user])
     msg['Subject'] = '获取验证码'
     server = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -290,9 +254,9 @@ def forget(request):
 
             resq = HttpResponseRedirect('/all_user/forget/check')
             resq.set_cookie(key='res_email', value=email, max_age=None, expires=None)
-            resq.set_cookie(key='username',value=user.username,max_age=None, expires=None)
+            resq.set_cookie(key='username',value=user.student_num,max_age=None, expires=None)
             my_sender = '352446506@qq.com'
-            my_pass = 'pxlkiawjlcmdbiig'
+            my_pass = 'avfivdkqkvcabibj'
             my_user = email
             import random
             code = random.randint(1000, 9999)
@@ -301,7 +265,7 @@ def forget(request):
                 '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
                     code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
                 'html', 'utf-8')
-            msg['From'] = formataddr(['FuHua团队', my_sender])
+            msg['From'] = formataddr(['校园智慧防疫', my_sender])
             msg['To'] = formataddr(['FK', my_user])
             msg['Subject'] = '获取验证码'
             server = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -430,3 +394,8 @@ def qunfa(request):
         return HttpResponse("群发成功")
 
 
+def successful(request):
+    return render(request, 'successful.html')
+
+def busy(request):
+    return render(request, 'busy.html')

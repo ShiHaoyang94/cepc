@@ -1,10 +1,14 @@
 import os.path
+import smtplib
+from email.mime.text import MIMEText
+from email.utils import formataddr
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 import requests, re
 from django.contrib import messages
-
+from all_user.models import AllUser
+from abnormal_records.models import AbnormalRecords
 # Create your views here.
 from cepc import settings
 from .models import TripCardRecords
@@ -137,7 +141,43 @@ def post(request):
                     tcrecd.creation_time = updated_time
                     tcrecd.save()
                     os.remove(file_names)
-                    return HttpResponseRedirect('/successful')
+                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    if 1:
+                        my_sender = '352446506@qq.com'
+                        my_pass = 'avfivdkqkvcabibj'
+                        all_user = AllUser.objects.get(student_num=abnormal.student_num)
+                        admin = AllUser.objects.get(class_name=all_user.class_name , privileges='2')
+                        my_user = str(admin.email)
+                        if abnormal.bts_record == '1':
+                            abnormal.bts_record = '今日返校'
+                        elif abnormal.bts_record == '3':
+                            abnormal.bts_record = '已经返校'
+                        else:
+                            abnormal.bts_record = '暂缓返校'
+                        msg = MIMEText(
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            + str(all_user.name) + '</br>'
+                            + '学号：' + str(abnormal.student_num) + '</br>'
+                            + '学院：' + str(all_user.college_name) + '</br>'
+                            + '班级：' + str(all_user.class_name) + '</br>'
+                            + '经过风险地区</br>'
+                            + '近七日去过：' + str(reResult[0]) + '</br>'
+                            + '当日体温：' + str(abnormal.temperature) + '</br>'
+                            + '异常类型：' + str(abnormal.abnormal_type) + '</br>'
+                            + '具体描述：' + str(abnormal.abnormal_desc) + '</br>'
+                            + '联系电话：' + str(all_user.phone) + '</br>'
+                            + '返校类型：' + str(abnormal.bts_record) + '</br>'
+                            + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
+                            'html', 'utf-8')
+                        msg['From'] = formataddr(['校园防疫管理系统', my_sender])
+                        msg['To'] = formataddr(['FK', my_user])
+                        msg['Subject'] = '异常提醒'
+                        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+                        server.login(my_sender, my_pass)
+                        server.sendmail(my_sender, [my_user], msg.as_string())
+                        server.quit()
+
+                        return render(request, 'successful.html')
 
                 except Exception as e:
 
@@ -148,7 +188,42 @@ def post(request):
                                                    handle=handle
                                                    )
                     os.remove(file_names)
-                    return HttpResponseRedirect('/successful')
+                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    if 1:
+                        my_sender = '352446506@qq.com'
+                        my_pass = 'avfivdkqkvcabibj'
+                        all_user = AllUser.objects.get(student_num=abnormal.student_num)
+                        admin = AllUser.objects.get(class_name=all_user.class_name, privileges='2')
+                        my_user = str(admin.email)
+                        if abnormal.bts_record == '1':
+                            abnormal.bts_record = '今日返校'
+                        elif abnormal.bts_record == '3':
+                            abnormal.bts_record = '已经返校'
+                        else:
+                            abnormal.bts_record = '暂缓返校'
+                        msg = MIMEText(
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            + str(all_user.name) + '</br>'
+                            + '学号：' + str(abnormal.student_num) + '</br>'
+                            + '学院：' + str(all_user.college_name) + '</br>'
+                            + '班级：' + str(all_user.class_name) + '</br>'
+                            + '经过风险地区</br>'
+                            + '近七日去过：' + str(reResult[0]) + '</br>'
+                            + '当日体温：' + str(abnormal.temperature) + '</br>'
+                            + '异常类型：' + str(abnormal.abnormal_type) + '</br>'
+                            + '具体描述：' + str(abnormal.abnormal_desc) + '</br>'
+                            + '联系电话：' + str(all_user.phone) + '</br>'
+                            + '返校类型：' + str(abnormal.bts_record) + '</br>'
+                            + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
+                            'html', 'utf-8')
+                        msg['From'] = formataddr(['校园防疫管理系统', my_sender])
+                        msg['To'] = formataddr(['FK', my_user])
+                        msg['Subject'] = '异常提醒'
+                        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+                        server.login(my_sender, my_pass)
+                        server.sendmail(my_sender, [my_user], msg.as_string())
+                        server.quit()
+                        return render(request, 'successful.html')
             else:
                 try:
                     tcrecd = TripCardRecords.objects.get(handle=handle)
@@ -158,7 +233,42 @@ def post(request):
                     tcrecd.creation_time = updated_time
                     tcrecd.save()
                     os.remove(file_names)
-                    return HttpResponseRedirect('/successful')
+                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
+                        my_sender = '352446506@qq.com'
+                        my_pass = 'avfivdkqkvcabibj'
+                        all_user = AllUser.objects.get(student_num=abnormal.student_num)
+                        admin = AllUser.objects.get(class_name=all_user.class_name, privileges='2')
+                        my_user = str(admin.email)
+                        if abnormal.bts_record == '1':
+                            abnormal.bts_record = '今日返校'
+                        elif abnormal.bts_record == '3':
+                            abnormal.bts_record = '已经返校'
+                        else:
+                            abnormal.bts_record = '暂缓返校'
+                        msg = MIMEText(
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            + str(all_user.name) + '</br>'
+                            + '学号：' + str(abnormal.student_num) + '</br>'
+                            + '学院：' + str(all_user.college_name) + '</br>'
+                            + '班级：' + str(all_user.class_name) + '</br>'
+                            + '未经过风险地区</br>'
+                            + '近七日去过：' + str(reResult[0]) + '</br>'
+                            + '当日体温：' + str(abnormal.temperature) + '</br>'
+                            + '异常类型：' + str(abnormal.abnormal_type) + '</br>'
+                            + '具体描述：' + str(abnormal.abnormal_desc) + '</br>'
+                            + '联系电话：' + str(all_user.phone) + '</br>'
+                            + '返校类型：' + str(abnormal.bts_record) + '</br>'
+                            + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
+                            'html', 'utf-8')
+                        msg['From'] = formataddr(['校园防疫管理系统', my_sender])
+                        msg['To'] = formataddr(['FK', my_user])
+                        msg['Subject'] = '异常提醒'
+                        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+                        server.login(my_sender, my_pass)
+                        server.sendmail(my_sender, [my_user], msg.as_string())
+                        server.quit()
+                        return render(request, 'successful.html')
 
                 except Exception as e:
 
@@ -169,7 +279,43 @@ def post(request):
                                                    handle=handle
                                                    )
                     os.remove(file_names)
-                    return HttpResponseRedirect('/successful')
+                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
+                        my_sender = '352446506@qq.com'
+                        my_pass = 'avfivdkqkvcabibj'
+                        all_user = AllUser.objects.get(student_num=abnormal.student_num)
+                        admin = AllUser.objects.get(class_name=all_user.class_name, privileges='2')
+                        my_user = str(admin.email)
+                        if abnormal.bts_record == '1':
+                            abnormal.bts_record = '今日返校'
+                        elif abnormal.bts_record == '3':
+                            abnormal.bts_record = '已经返校'
+                        else:
+                            abnormal.bts_record = '暂缓返校'
+
+                        msg = MIMEText(
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            + str(all_user.name) + '</br>'
+                            + '学号：' + str(abnormal.student_num) + '</br>'
+                            + '学院：' + str(all_user.college_name) + '</br>'
+                            + '班级：' + str(all_user.class_name) + '</br>'
+                            + '未经过风险地区</br>'
+                            + '近七日去过：' + str(reResult[0]) + '</br>'
+                            + '当日体温：' + str(abnormal.temperature) + '</br>'
+                            + '异常类型：' + str(abnormal.abnormal_type) + '</br>'
+                            + '具体描述：' + str(abnormal.abnormal_desc) + '</br>'
+                            + '联系电话：' + str(all_user.phone) + '</br>'
+                            + '返校类型：' + str(abnormal.bts_record) + '</br>'
+                            + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
+                            'html', 'utf-8')
+                        msg['From'] = formataddr(['校园防疫管理系统', my_sender])
+                        msg['To'] = formataddr(['FK', my_user])
+                        msg['Subject'] = '异常提醒'
+                        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+                        server.login(my_sender, my_pass)
+                        server.sendmail(my_sender, [my_user], msg.as_string())
+                        server.quit()
+                        return render(request, 'successful.html')
 
         except Exception as e:
 

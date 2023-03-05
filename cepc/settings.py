@@ -145,7 +145,7 @@ EMAL_POST = 25
 # 发送邮件的邮箱
 EMAIL_HOST_USER = '352446506@qq.com'
 # 在邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = 'ktnbdvqhrvwecafd'
+EMAIL_HOST_PASSWORD = 'avfivdkqkvcabibj'
 # 收件人看到的发件人<此处要和发送邮件的邮箱相同>
 EX_EMAIL = ['352446506@qq.com']
 
