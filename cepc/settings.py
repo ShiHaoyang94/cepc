@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
     'trip_card_records',
     'django_tctip',
     'abnormal_records',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -151,3 +154,53 @@ EX_EMAIL = ['352446506@qq.com']
 
 MEDIA_URL='/media/'
 MEDIA_ROOT= os.path.join(BASE_DIR,'media')
+# 隐藏右侧SimpleUI广告链接和使用分析
+SIMPLEUI_HOME_INFO = False
+SIMPLEUI_ANALYSIS = False
+
+SIMPLEUI_CONFIG = {
+    # 是否使用系统默认菜单，自定义菜单时建议关闭。
+    'system_keep': False,
+
+    # 用于菜单排序和过滤, 不填此字段为默认排序和全部显示。空列表[] 为全部不显示.
+    'menu_display': ['用户明细维护','上报异常维护','行程异常维护','公告栏','权限认证'],
+
+    # 设置是否开启动态菜单, 默认为False. 如果开启, 则会在每次用户登陆时刷新展示菜单内容。
+    # 一般建议关闭。
+    'dynamic': False,
+    'menus': [
+        {
+            'app': 'auth',
+            'name': '权限认证',
+            'icon': 'fas fa-user-shield',
+            'models': [
+                {
+                    'name': '管理用户列表',
+                    'icon': 'fa fa-user-secret',
+                    'url': 'auth/user/'
+                },
+                {
+                    'name': '用户组',
+                    'icon': 'fa fa-th-list',
+                    'url': 'auth/group/'
+                }
+            ]
+        },
+
+        {
+            'name': '行程异常维护',
+            'icon': 'fa fa-exclamation-triangle',
+            'url': '/admin/trip_card_records/tripcardrecords/'
+        },
+{
+            'name': '上报异常维护',
+            'icon': 'fa fa-exclamation-triangle',
+            'url': '/admin/abnormal_records/abnormalrecords/'
+        },
+{
+            'name': '用户明细维护',
+            'icon': 'fa fa-user-md',
+            'url': '/admin/all_user/alluser/'
+        },
+    ]
+}
