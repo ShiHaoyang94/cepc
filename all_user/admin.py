@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
+from django.contrib.admin import SimpleListFilter
+
 from all_user.models import AllUser
 #
 #
@@ -23,6 +25,7 @@ from .resource import AllUserResource
 # 重写一个管理类，并绑定到模型类
 @admin.register(AllUser)
 class AllUserColumnsAdmin(ImportExportModelAdmin):
+
     # 对接资源类
     resource_class = AllUserResource
     # 类表页面展示哪些，与导入导出无关
@@ -30,3 +33,5 @@ class AllUserColumnsAdmin(ImportExportModelAdmin):
     list_display = ['student_num','name','id_num','campus','college_name','class_name','phone','user_type','email','password','privileges','is_active']
     list_display_links = ['student_num']
     readonly_fields = ['student_num']
+    search_fields = ['student_num','name','id_num','campus','college_name','class_name','phone','user_type','email','password','privileges','is_active']
+    list_filter = ['campus','college_name','class_name','user_type']

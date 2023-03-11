@@ -49,9 +49,7 @@ class Tip(models.Model):
     wechat_qrimg = models.TextField('微信群栏二维码图片地址', default=DEFAULT_WEIXIN_IMG)
 
     class Meta:
+        managed = False
+        db_table = 'django_tctip_tip'
         verbose_name = '公告栏'
         verbose_name_plural = verbose_name
-        ordering = ['-create_date']
-
-    def __str__(self):
-        return self.name

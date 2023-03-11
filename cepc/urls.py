@@ -24,6 +24,11 @@ from trip_card_records import views as index_views
 from cepc import view, settings
 from abnormal_records import views
 from all_user import views as user_views
+from django.conf.urls import url
+from django.contrib import admin
+from django.views.generic.base import RedirectView
+
+
 urlpatterns = [
 
 
@@ -34,5 +39,8 @@ urlpatterns = [
     path('busy/',user_views.busy),
     path('successful/',user_views.successful),
     path('abnormal_records/',include('abnormal_records.urls')),
+
+
+
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

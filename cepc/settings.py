@@ -39,16 +39,35 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'all_user',
     'trip_card_records',
     'django_tctip',
     'abnormal_records',
     'import_export',
+
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     'middleware.middleware.SimpleMiddleware',
+    # 'middleware.middleware.IpMiddleware'
+    #'middleware.middleware.ExceptionMW'
+
+]
+MIDDLEWARE_CLASSES = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -163,7 +182,7 @@ SIMPLEUI_CONFIG = {
     'system_keep': False,
 
     # 用于菜单排序和过滤, 不填此字段为默认排序和全部显示。空列表[] 为全部不显示.
-    'menu_display': ['用户明细维护','上报异常维护','行程异常维护','公告栏','权限认证'],
+    'menu_display': ['用户明细维护','上报异常维护','行程异常维护','实时数据可视化大屏','公告栏','权限认证'],
 
     # 设置是否开启动态菜单, 默认为False. 如果开启, 则会在每次用户登陆时刷新展示菜单内容。
     # 一般建议关闭。
@@ -183,8 +202,10 @@ SIMPLEUI_CONFIG = {
                     'name': '用户组',
                     'icon': 'fa fa-th-list',
                     'url': 'auth/group/'
-                }
+                },
+
             ]
+
         },
 
         {
@@ -193,14 +214,37 @@ SIMPLEUI_CONFIG = {
             'url': '/admin/trip_card_records/tripcardrecords/'
         },
 {
+            'app': 'django_tctip',
+            'name': '公告栏',
+
+            'models': [
+                {
+                    'name': '公告栏',
+
+                    'url': '/admin/django_tctip/tip/'
+                },
+
+            ]
+        },
+        {'name': '实时数据可视化大屏',
+         'icon': 'fas fa-user-shield',
+        'url': 'http://localhost:8075/webroot/decision/view/form?viewlet=%25E5%25AD%25A6%25E7%2594%259F%25E5%2581%25A5%25E5%25BA%25B7%25E7%258A%25B6%25E5%2586%25B5%25E5%2588%2586%25E6%259E%2590%25E5%25A4%25A7%25E5%25B1%258F%252F%25E5%25AD%25A6%25E7%2594%259F%25E5%2581%25A5%25E5%25BA%25B7%25E7%258A%25B6%25E5%2586%25B5%25E5%2588%2586%25E6%259E%2590%25E5%25A4%25A7%25E5%25B1%258F%252F%25E5%25AD%25A6%25E7%2594%259F%25E5%2581%25A5%25E5%25BA%25B7%25E7%258A%25B6%25E5%2586%25B5%25E5%2588%2586%25E6%259E%2590%25E5%25A4%25A7%25E5%25B1%258F.frm' ,
+'newTab': True,
+         },
+{
             'name': '上报异常维护',
             'icon': 'fa fa-exclamation-triangle',
             'url': '/admin/abnormal_records/abnormalrecords/'
+
         },
 {
             'name': '用户明细维护',
             'icon': 'fa fa-user-md',
             'url': '/admin/all_user/alluser/'
         },
+
+
+
     ]
 }
+SIMPLEUI_LOGO='https://i.328888.xyz/2023/03/11/sPz8q.jpeg'

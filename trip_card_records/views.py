@@ -141,7 +141,7 @@ def post(request):
                     tcrecd.creation_time = updated_time
                     tcrecd.save()
                     os.remove(file_names)
-                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    abnormal = AbnormalRecords.objects.get(handle=handle)
                     if 1:
                         my_sender = '352446506@qq.com'
                         my_pass = 'avfivdkqkvcabibj'
@@ -188,7 +188,7 @@ def post(request):
                                                    handle=handle
                                                    )
                     os.remove(file_names)
-                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    abnormal = AbnormalRecords.objects.get(handle=handle)
                     if 1:
                         my_sender = '352446506@qq.com'
                         my_pass = 'avfivdkqkvcabibj'
@@ -233,7 +233,7 @@ def post(request):
                     tcrecd.creation_time = updated_time
                     tcrecd.save()
                     os.remove(file_names)
-                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    abnormal = AbnormalRecords.objects.get(handle=handle)
                     if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
                         my_sender = '352446506@qq.com'
                         my_pass = 'avfivdkqkvcabibj'
@@ -279,7 +279,7 @@ def post(request):
                                                    handle=handle
                                                    )
                     os.remove(file_names)
-                    abnormal = AbnormalRecords.objects.get(student_num=student_num)
+                    abnormal = AbnormalRecords.objects.get(handle=handle)
                     if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
                         my_sender = '352446506@qq.com'
                         my_pass = 'avfivdkqkvcabibj'

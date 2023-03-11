@@ -4,7 +4,7 @@ from .models import Tip
 
 # Register your models here.
 
-@admin.register(Tip)
+
 class TipAdmin(admin.ModelAdmin):
     list_display = ('name', 'create_date', 'is_on', 'notice_flag',
                     'alipay_flag', 'weixin_flag', 'wechat_flag')
@@ -27,3 +27,4 @@ class TipAdmin(admin.ModelAdmin):
                               ('wechat_desc', 'wechat_qrimg'),
                               ('wechat_icon',))})
     )
+admin.site.register(Tip, TipAdmin)

@@ -8,6 +8,8 @@ class TripCardRecordsManager(admin.ModelAdmin):
     list_display = ['student_num','ifnormal','r_location','creation_time']
     list_display_links = ['student_num']
     readonly_fields = ['student_num']
+    list_filter = ['ifnormal','creation_time']
+    search_fields = ['student_num','ifnormal','r_location','creation_time']
 admin.site.register(TripCardRecords, TripCardRecordsManager)
 from django.contrib import admin
 
