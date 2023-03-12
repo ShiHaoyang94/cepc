@@ -139,6 +139,8 @@ def post(request):
                     tcrecd.ifnormal = '1'
                     tcrecd.r_location = reResult[0]
                     tcrecd.creation_time = updated_time
+                    tcrecd.info = None
+                    tcrecd.is_sign = '0'
                     tcrecd.save()
                     os.remove(file_names)
                     abnormal = AbnormalRecords.objects.get(handle=handle)
@@ -155,7 +157,7 @@ def post(request):
                         else:
                             abnormal.bts_record = '暂缓返校'
                         msg = MIMEText(
-                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用校园防疫防控系统<br />异常消息类型:<br />姓名'
                             + str(all_user.name) + '</br>'
                             + '学号：' + str(abnormal.student_num) + '</br>'
                             + '学院：' + str(all_user.college_name) + '</br>'
@@ -180,11 +182,13 @@ def post(request):
                         return render(request, 'successful.html')
 
                 except Exception as e:
-
+                    user = AllUser.objects.get(student_num=student_num)
                     TripCardRecords.objects.create(student_num=student_num,
                                                    ifnormal='1',
                                                    r_location=reResult[0],
                                                    creation_time=updated_time,
+                                                   is_sign = '0',
+                                                   college_name=user.college_name,
                                                    handle=handle
                                                    )
                     os.remove(file_names)
@@ -202,7 +206,7 @@ def post(request):
                         else:
                             abnormal.bts_record = '暂缓返校'
                         msg = MIMEText(
-                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用校园防疫防控系统<br />异常消息类型:<br />姓名'
                             + str(all_user.name) + '</br>'
                             + '学号：' + str(abnormal.student_num) + '</br>'
                             + '学院：' + str(all_user.college_name) + '</br>'
@@ -226,9 +230,12 @@ def post(request):
                         return render(request, 'successful.html')
             else:
                 try:
+
                     tcrecd = TripCardRecords.objects.get(handle=handle)
                     tcrecd.student_num = student_num
                     tcrecd.ifnormal = '0'
+                    tcrecd.is_sign = None
+                    tcrecd.info = None
                     tcrecd.r_location = reResult[0]
                     tcrecd.creation_time = updated_time
                     tcrecd.save()
@@ -247,7 +254,7 @@ def post(request):
                         else:
                             abnormal.bts_record = '暂缓返校'
                         msg = MIMEText(
-                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用校园防疫防控系统<br />异常消息类型:<br />姓名'
                             + str(all_user.name) + '</br>'
                             + '学号：' + str(abnormal.student_num) + '</br>'
                             + '学院：' + str(all_user.college_name) + '</br>'
@@ -269,14 +276,19 @@ def post(request):
                         server.sendmail(my_sender, [my_user], msg.as_string())
                         server.quit()
                         return render(request, 'successful.html')
+                    else:
+                        return render(request, 'successful.html')
 
                 except Exception as e:
+                    user = AllUser.objects.get(student_num=student_num)
 
                     TripCardRecords.objects.create(student_num=student_num,
                                                    ifnormal='0',
                                                    r_location=reResult[0],
                                                    creation_time=updated_time,
-                                                   handle=handle
+                                                   handle=handle,
+                                                   is_sign=None,
+                                                   college_name=user.college_name
                                                    )
                     os.remove(file_names)
                     abnormal = AbnormalRecords.objects.get(handle=handle)
@@ -294,7 +306,7 @@ def post(request):
                             abnormal.bts_record = '暂缓返校'
 
                         msg = MIMEText(
-                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用FuHua科技<br />异常消息类型:<br />姓名'
+                            '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的管理员您好!<br><br>欢迎使用校园防疫防控系统<br />异常消息类型:<br />姓名'
                             + str(all_user.name) + '</br>'
                             + '学号：' + str(abnormal.student_num) + '</br>'
                             + '学院：' + str(all_user.college_name) + '</br>'

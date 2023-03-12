@@ -108,55 +108,59 @@ def register(request):
 
         register_username = request.COOKIES.get('username')
         all_user=AllUser.objects.get(student_num=register_username)
-        register_email = all_user.email
+        register_email = request.POST['email']
         register_password = request.POST['password']
         register_password2 = request.POST['password2']
-        if register_password==register_password2:
+        if all_user.email== register_email:
+            if register_password==register_password2:
 
-            m = hashlib.md5()
+                m = hashlib.md5()
 
-            m.update(register_password.encode())
+                m.update(register_password.encode())
 
-            register_password_m = m.hexdigest()
+                register_password_m = m.hexdigest()
 
-            my_sender = '352446506@qq.com'
-            my_pass = 'avfivdkqkvcabibj'
-            my_user = register_email
-            import random
-            code = random.randint(1000, 9999)
+                my_sender = '352446506@qq.com'
+                my_pass = 'avfivdkqkvcabibj'
+                my_user = register_email
+                import random
+                code = random.randint(1000, 9999)
 
-            msg = MIMEText(
-                        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
+                msg = MIMEText(
+                        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用校园防疫防控系统<br />您的邮箱验证码为:' + str(
                             code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
                         'html', 'utf-8')
-            msg['From'] = formataddr(['校园智慧防疫', my_sender])
-            msg['To'] = formataddr(['FK', my_user])
-            msg['Subject'] = '获取验证码'
-            server = smtplib.SMTP_SSL('smtp.qq.com', 465)
-            server.login(my_sender, my_pass)
-            server.sendmail(my_sender, [my_user], msg.as_string())
-            server.quit()
-            m = hashlib.md5()
+                msg['From'] = formataddr(['校园防疫防控系统', my_sender])
+                msg['To'] = formataddr(['FK', my_user])
+                msg['Subject'] = '获取验证码'
+                server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+                server.login(my_sender, my_pass)
+                server.sendmail(my_sender, [my_user], msg.as_string())
+                server.quit()
+                m = hashlib.md5()
 
-            m.update(str(code).encode())
+                m.update(str(code).encode())
 
-            code_m = m.hexdigest()
-            resq = HttpResponseRedirect('/all_user/check')
-            resq.set_cookie(key='res_username', value=register_username,max_age=None,expires=None)
-            resq.set_cookie(key='res_email', value=register_email,max_age=None,expires=None)
-            resq.set_cookie(key='res_password', value=register_password_m,max_age=None,expires=None)
-            resq.set_cookie(key='res_code',value=code_m,max_age=None,expires=None)
+                code_m = m.hexdigest()
+                resq = HttpResponseRedirect('/all_user/check')
+                resq.set_cookie(key='res_username', value=register_username,max_age=None,expires=None)
+                resq.set_cookie(key='res_email', value=register_email,max_age=None,expires=None)
+                resq.set_cookie(key='res_password', value=register_password_m,max_age=None,expires=None)
+                resq.set_cookie(key='res_code',value=code_m,max_age=None,expires=None)
 
-            return resq
+                return resq
 
+
+            else:
+
+                messages.error(request, "两次密码输入不一致")
+
+                return HttpResponseRedirect('/all_user/register')
 
         else:
-
-            messages.error(request, "两次密码输入不一致")
+            messages.error(request, "邮箱号不是注册邮箱号请重试")
 
             return HttpResponseRedirect('/all_user/register')
-
-
 def check(request):
     if request.method == 'GET':
 
@@ -211,10 +215,10 @@ def re(request):
     code = random.randint(1000, 9999)
 
     msg = MIMEText(
-        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
+        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用校园防疫防控系统<br />您的邮箱验证码为:' + str(
             code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
         'html', 'utf-8')
-    msg['From'] = formataddr(['校园智慧防疫', my_sender])
+    msg['From'] = formataddr(['校园防疫防控系统', my_sender])
     msg['To'] = formataddr(['FK', my_user])
     msg['Subject'] = '获取验证码'
     server = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -262,10 +266,10 @@ def forget(request):
             code = random.randint(1000, 9999)
 
             msg = MIMEText(
-                '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
+                '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用校园防疫防控系统<br />您的邮箱验证码为:' + str(
                     code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
                 'html', 'utf-8')
-            msg['From'] = formataddr(['校园智慧防疫', my_sender])
+            msg['From'] = formataddr(['校园防疫防控系统', my_sender])
             msg['To'] = formataddr(['FK', my_user])
             msg['Subject'] = '获取验证码'
             server = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -348,10 +352,10 @@ def res(request):
     code = random.randint(1000, 9999)
 
     msg = MIMEText(
-        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用FuHua科技<br />您的邮箱验证码为:' + str(
+        '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的用户您好!<br><br>欢迎使用校园防疫防控系统<br />您的邮箱验证码为:' + str(
             code) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
         'html', 'utf-8')
-    msg['From'] = formataddr(['FuHua团队', my_sender])
+    msg['From'] = formataddr(['校园防疫防控系统', my_sender])
     msg['To'] = formataddr(['FK', my_user])
     msg['Subject'] = '获取验证码'
     server = smtplib.SMTP_SSL('smtp.qq.com', 465)
@@ -381,10 +385,10 @@ def qunfa(request):
             my_user = user.email
             msg = MIMEText(
                 '<html><head></head><body><div style="background-color:#262827;"><br><br><br><hr size="5" noshade="noshade" style="border:5px #cccccc dotted;"><h1 style="color: aliceblue;"><strong>尊敬的' + str(
-                    user.username) + '您好!<br><br>欢迎使用FuHua科技<br />本次新版本更新内容:' + str(
+                    user.username) + '您好!<br><br>欢迎使用校园防疫防控系统<br />本次新版本更新内容:' + str(
                     word) + '</strong></h1><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpicnew8.photophoto.cn%2F20140511%2Fheisebeijing-shuzhixiaoniao-heisewenlubeijing-02084221_1.jpg&refer=http%3A%2F%2Fpicnew8.photophoto.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1644811756&t=abc196077281a644bddce5e2eac8dbf2" ></div></body></html>',
                 'html', 'utf-8')
-            msg['From'] = formataddr(['FuHua团队', my_sender])
+            msg['From'] = formataddr(['校园防疫防控系统', my_sender])
             msg['To'] = formataddr(['FK', my_user])
             msg['Subject'] = '版本更新提醒'
 

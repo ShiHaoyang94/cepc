@@ -8,7 +8,7 @@ Author URL: http://w3layouts.com
 <html lang="zxx">
 
 <head>
-    <title>FuHua科技|登录FuHua账号</title>
+    <title>校园防疫防控系统|日常信息填报</title>
 
 	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
     <!-- Meta tags -->
@@ -21,30 +21,76 @@ Author URL: http://w3layouts.com
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="{% static 'user_css/style.css'%}" type="text/css" media="all" />
 {% load_tctip %}
+    <style>
+
+		form {
+			background-color: #fff;
+			border-radius: 10px;
+			padding: 20px;
+			margin: 50px auto;
+			max-width: 600px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.2);
+		}
+		label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: bold;
+		}
+		input[type="text"], input[type="email"], select {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+			font-size: 16px;
+		}
+		input[type="radio"], input[type="checkbox"] {
+			margin-right: 5px;
+		}
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			transition: background-color 0.3s;
+		}
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+	</style>
 </head>
 
 <body>
     <div class="signinform">
-        <h1>欢迎来到FUHUA~</h1>
+        <h1>日常健康状态上报</h1>
         <!-- container -->
         <div class="container">
+                  <div style="text-align:right;">
+       <li ><a href="/all_user/exit"><i class="fa fa-sign-out fa-fw"></i>退出登录</a>
+</div>
             <!-- main content -->
             <div class="w3l-form-info">
                 <div class="w3_info">
-                    <h2>Login</h2>
+                    <h2>请填写</h2>
+
 
                     <form id="form1" method="post" target="_self" >
 
-                        省份: <select name="province" style="width:100px;"></select>
-                        城市: <select name="city" style="width:100px;"></select>
-
+                        省份: <select name="province" style="width:90px;"></select>
+                        城市: <select name="city" style="width:90px;"></select>
+                        <div class="input-group">
+</div>
                         <input   type="hidden" id="ip" name="ip" >
                          <div class="input-group">
-                            <span><i class="fas fa-user" aria-hidden="true"></i></span>
+
                              <input type="text" placeholder="今日体温" required="required" name="TEMPERATURE" onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" />
 
                         </div>
-                          异常上报<select name="ABNORMAL_TYPE" required="required" class="shortselect">
+                          异常类型<select name="ABNORMAL_TYPE" required="required" class="shortselect">
                             <option value=""selected="selected">---请选择--</option>
                             <option value="无" >无</option>
                             <option value="发热">发热</option>
@@ -52,7 +98,7 @@ Author URL: http://w3layouts.com
                         <option value="浑身疼">浑身疼</option>
                     </select>
                            <div class="input-group">
-                            <span><i class="fas fa-user" aria-hidden="true"></i></span>
+
                             <input type="text" placeholder="具体描述" required="required" name="ABNORMAL_DESC">
                         </div>
                         在校状态<select name="BTS_RECORD"  required="required" class="shortselect">
@@ -63,7 +109,7 @@ Author URL: http://w3layouts.com
                     </select>
                         <button class="btn btn-primary btn-block" type="submit">提交</button>
                          <p class="account">还没有改密码嘛? <a href="/all_user/register">更改密码</a></p>
-                        <li><a href="/all_user/exit"><i class="fa fa-sign-out fa-fw"></i>退出登录</a>
+
                     </form>
                     		 {% if messages %}
         <script>
@@ -79,7 +125,7 @@ Author URL: http://w3layouts.com
         <!-- //container -->
         <!-- footer -->
         <div class="footer">
-            <p>&copy; 2022 Service login form. All Rights Reserved | Design by <a href=""
+            <p>&copy; 2023 Service . All Rights Reserved | Design by <a href=""
                     target="blank">ShiHaoyang</a></p>
         </div>
         <!-- footer -->
@@ -100,9 +146,9 @@ Author URL: http://w3layouts.com
     </script>
 
 <script type="text/javascript">
-var arr_province = ["请选择省/城市","北京","上海","天津","重庆","新疆","西藏","宁夏","内蒙古","广西","黑龙江","吉林","辽宁","河北","山东","江苏","安徽","浙江","福建","广东","海南","云南","贵州","四川","湖南","湖北","河南","山西","陕西","甘肃","青海","江西","台湾"];
+var arr_province = ["请选择","北京","上海","天津","重庆","新疆","西藏","宁夏","内蒙古","广西","黑龙江","吉林","辽宁","河北","山东","江苏","安徽","浙江","福建","广东","海南","云南","贵州","四川","湖南","湖北","河南","山西","陕西","甘肃","青海","江西","台湾"];
 var arr_city = [
-                ["请选择城市/地区"],
+                ["请选择"],
                 ["北京"],
                 ['上海'],
                 ['天津'],

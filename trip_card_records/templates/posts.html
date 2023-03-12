@@ -8,36 +8,78 @@ Author URL: http://w3layouts.com
 <html lang="zxx">
 
 <head>
-    <title>FuHua科技|登录FuHua账号</title>
+    <title>校园防疫防控系统|行程卡上传</title>
 
 	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
     <!-- Meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="{% static 'user_css/style.css'%}" type="text/css" media="all" />
 {% load_tctip %}
+    <style>
+
+        input[type="file"] {
+			margin-top: 10px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			width: 80%;
+			max-width: 500px;
+		}
+		.preview {
+			margin-top: 20px;
+			max-width: 500px;
+		}
+		.preview img {
+			max-width: 100%;
+		}
+		.preview iframe {
+			width: 100%;
+			height: 500px;
+			border: none;
+		}
+.preview {
+			margin-top: 20px;
+			max-width: 500px;
+		}
+		.preview img {
+			max-width: 100%;
+		}
+		.preview iframe {
+			width: 100%;
+			height: 500px;
+			border: none;
+		}
+    </style>
 </head>
 
 <body>
     <div class="signinform">
-        <h1>欢迎来到FUHUA~</h1>
+        <h1>行程卡上报</h1>
+
         <!-- container -->
         <div class="container">
             <!-- main content -->
+            <div style="text-align:right;">
+       <li ><a href="/all_user/exit"><i class="fa fa-sign-out fa-fw"></i>退出登录</a>
+</div>
             <div class="w3l-form-info">
                 <div class="w3_info">
-                    <h2>Login</h2>
+                    <h2>上传行程卡</h2>
 
                     <form  method="post" target="_self" enctype="multipart/form-data">
- <input  type="file" name="file_name">
-                            <button id="az" type="submit"><font color="white" size="3">上传</font></button>
+                        <div class="input-group">
+ <input  type="file"  id="file"name="file_name">
+                        </div>
+<div class="preview"></div>
+                            <button class="btn btn-primary btn-block" id="az" type="submit"><font color="white" size="3">上传</font></button>
                          <p class="account">还没有改密码嘛? <a href="/all_user/register">更改密码</a></p>
-<li><a href="/all_user/exit"><i class="fa fa-sign-out fa-fw"></i>退出登录</a>
+
                     </form>
                     		 {% if messages %}
         <script>
@@ -63,7 +105,30 @@ Author URL: http://w3layouts.com
     <script src="{% static 'user_js/fontawesome.js'%}"></script>
 
 
+<script>
+    const fileInput = document.getElementById('file');
+		const preview = document.querySelector('.preview');
 
+		fileInput.addEventListener('change', function(e) {
+			const file = e.target.files[0];
+			const fileType = file.type;
+			const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+			const validPdfType = ['application/pdf'];
+
+			if (validImageTypes.includes(fileType)) {
+				preview.innerHTML = '';
+				const img = document.createElement('img');
+				img.src = URL.createObjectURL(file);
+				preview.appendChild(img);
+			} else if (validPdfType.includes(fileType)) {
+				preview.innerHTML = '';
+				const pdf = document.createElement('iframe');
+				pdf.src = URL.createObjectURL(file);
+				preview.appendChild(pdf);
+			} else {
+				alert('仅支持上传图片和 PDF 文件！');
+			}
+		});
 </script>
 
 </body>

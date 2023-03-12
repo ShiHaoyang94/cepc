@@ -62,7 +62,7 @@ class SimpleMiddleware(MiddlewareMixin):
 
 # class ExceptionMW(MiddlewareMixin):
 #     def process_exception(self, request, exception):
-#         mail.send_mail(subject='FuHua科技报错啦~', message=traceback.format_exc()+str(request.session.get('username'))+str(request.COOKIES.get('username')), from_email='352446506@qq.com',
+#         mail.send_mail(subject='校园防疫防控系统报错啦~', message=traceback.format_exc()+str(request.session.get('username'))+str(request.COOKIES.get('username')), from_email='352446506@qq.com',
 #                        recipient_list=settings.EX_EMAIL)
 #
 #         return HttpResponseRedirect('/busy')

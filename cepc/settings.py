@@ -209,7 +209,7 @@ SIMPLEUI_CONFIG = {
         },
 
         {
-            'name': '行程异常维护',
+            'name': '行程异常签到及维护',
             'icon': 'fa fa-exclamation-triangle',
             'url': '/admin/trip_card_records/tripcardrecords/'
         },
@@ -232,7 +232,7 @@ SIMPLEUI_CONFIG = {
 'newTab': True,
          },
 {
-            'name': '上报异常维护',
+            'name': '上报异常签到及维护',
             'icon': 'fa fa-exclamation-triangle',
             'url': '/admin/abnormal_records/abnormalrecords/'
 

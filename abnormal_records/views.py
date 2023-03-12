@@ -59,13 +59,20 @@ def post(request):
                     abnormal.abnormal_type=ABNORMAL_TYPE
                     abnormal.abnormal_desc=ABNORMAL_DESC
                     abnormal.bts_record=BTS_RECORD
+                    abnormal.is_sign=None
+                    abnormal.info=None
+                    user = AllUser.objects.get(student_num=student_num)
+                    abnormal.college_name=user.college_name
+                    if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
+                        abnormal.is_sign='0'
                     abnormal.save()
 
                     return HttpResponseRedirect('/trip_card_records/post')
 
                 except Exception as e:
-
-
+                    user = AllUser.objects.get(student_num=student_num)
+                    if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
+                        is_sign='0'
                     AbnormalRecords.objects.create(student_num=student_num,
                                                    location_c=LOCATION_C,
                                                    location_p=LOCATION_P,
@@ -74,6 +81,8 @@ def post(request):
                                                    abnormal_type=ABNORMAL_TYPE,
                                                    abnormal_desc=ABNORMAL_DESC,
                                                    bts_record=BTS_RECORD,
+                                                   college_name=user.college_name,
+                                                   is_sign=is_sign,
                                                    handle=handle
                     )
 
