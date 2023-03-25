@@ -12,5 +12,5 @@ class TripCardRecords(models.Model):
     class Meta:
         managed = False
         db_table = 'trip_card_records'
-        verbose_name = '行程异常维护'
+        verbose_name = '行程异常签到及维护'
         verbose_name_plural = verbose_name

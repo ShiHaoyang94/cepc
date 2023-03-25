@@ -19,5 +19,5 @@ class AbnormalRecords(models.Model):
     class Meta:
         managed = False
         db_table = 'abnormal_records'
-        verbose_name = '上报异常维护'
+        verbose_name = '上报异常签到及维护'
         verbose_name_plural = verbose_name
