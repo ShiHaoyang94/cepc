@@ -71,7 +71,7 @@ def post(request):
 
                 except Exception as e:
                     user = AllUser.objects.get(student_num=student_num)
-                    if float(abnormal.temperature) > 37 or abnormal.abnormal_type != '无':
+                    if float(TEMPERATURE) > 37 or ABNORMAL_TYPE != '无':
                         is_sign='0'
                     AbnormalRecords.objects.create(student_num=student_num,
                                                    location_c=LOCATION_C,
@@ -83,6 +83,7 @@ def post(request):
                                                    bts_record=BTS_RECORD,
                                                    college_name=user.college_name,
                                                    is_sign=is_sign,
+                                                   info = None,
                                                    handle=handle
                     )
 
